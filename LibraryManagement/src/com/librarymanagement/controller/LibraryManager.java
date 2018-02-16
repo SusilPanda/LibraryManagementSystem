@@ -1,8 +1,8 @@
-package com.library.controller;
+package com.librarymanagement.controller;
 
 import java.util.List;
 
-import com.library.bean.Book;
+import com.librarymanagement.bean.Book;
 
 public class LibraryManager {
 	
@@ -16,7 +16,7 @@ public class LibraryManager {
 		return null;
 	}
 	
-	public void borrowABook() {
+	public void borrowABook(int userId, long bookId) {
 		
 	}
 	

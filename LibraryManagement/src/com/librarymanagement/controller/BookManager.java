@@ -1,6 +1,6 @@
-package com.library.controller;
+package com.librarymanagement.controller;
 
-import com.library.bean.Book;
+import com.librarymanagement.bean.Book;
 
 public class BookManager {
 

@@ -1,8 +1,8 @@
-package com.library.db;
+package com.librarymanagement.dao;
 
 import java.util.List;
 
-import com.library.bean.Book;
+import com.librarymanagement.bean.Book;
 
 public interface BookDao {
 	

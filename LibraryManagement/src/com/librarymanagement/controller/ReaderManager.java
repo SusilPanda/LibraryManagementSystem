@@ -1,15 +1,14 @@
-package com.library.controller;
+package com.librarymanagement.controller;
 
-import com.library.bean.Reader;
-import com.library.db.ReaderDao;
-import com.library.db.ReaderDaoImpl;
+import com.librarymanagement.bean.Reader;
+import com.librarymanagement.dao.ReaderDao;
+import com.librarymanagement.dao.ReaderDaoImpl;
 
 public class ReaderManager {
 	
 	public Reader getReader(int readerId) {
 		ReaderDao daoImpl = new ReaderDaoImpl();
 		Reader reader = daoImpl.get(readerId);
-		//System.out.println("Reader : " + reader.getReaderName());
 		return reader;
 	}
 	

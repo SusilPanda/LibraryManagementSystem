@@ -1,4 +1,4 @@
-package com.library.db;
+package com.librarymanagement.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.library.bean.Reader;
+import org.h2.engine.Database;
+
+import com.librarymanagement.bean.Reader;
 
 public class ReaderDaoImpl implements ReaderDao {
 	
@@ -16,6 +18,8 @@ public class ReaderDaoImpl implements ReaderDao {
 	public ReaderDaoImpl() {
 		dbConnection = DataBaseConnection.getDbConnection();
 		DataBaseConnection.setUp();
+		DataBaseConnection.insertDefaultDataInDb(1, "Monthly", 30);
+		DataBaseConnection.insertDefaultDataInDb(2, "Annually", 364);
 	}
 
 	@Override

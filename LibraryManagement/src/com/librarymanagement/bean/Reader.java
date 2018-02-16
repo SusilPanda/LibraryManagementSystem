@@ -1,7 +1,8 @@
-package com.library.bean;
+package com.librarymanagement.bean;
 
 public class Reader {
 	
+
 	public int readerId;
 	public String readerName;
 	public String userName;
@@ -88,6 +89,12 @@ public class Reader {
 	 */
 	public void setBookBorrowedId(Book bookBorrowedId) {
 		this.bookBorrowedId = bookBorrowedId;
+	}
+	
+	@Override
+	public String toString() {
+		return "Reader [readerId=" + readerId + ", readerName=" + readerName + ", userName=" + userName + ", password="
+				+ password + ", bookBorrowedId=" + bookBorrowedId + ", emailId=" + emailId + "]";
 	}
 
 	

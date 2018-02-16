@@ -1,4 +1,4 @@
-package com.library.bean;
+package com.librarymanagement.bean;
 
 public class Book {
 	

@@ -1,8 +1,8 @@
-package com.library.db;
+package com.librarymanagement.dao;
 
 import java.util.List;
 
-import com.library.bean.Reader;
+import com.librarymanagement.bean.Reader;
 
 public interface ReaderDao {
 	

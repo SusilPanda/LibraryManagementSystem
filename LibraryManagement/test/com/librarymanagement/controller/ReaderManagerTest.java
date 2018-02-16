@@ -1,4 +1,4 @@
-package com.library.controller;
+package com.librarymanagement.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,7 +7,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.library.bean.Reader;
+import com.librarymanagement.bean.Reader;
+import com.librarymanagement.controller.ReaderManager;
 
 public class ReaderManagerTest {
 	
