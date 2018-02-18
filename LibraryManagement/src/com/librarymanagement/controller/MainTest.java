@@ -1,6 +1,5 @@
 package com.librarymanagement.controller;
 
-import java.sql.Connection;
 import java.util.List;
 
 import com.librarymanagement.bean.Book;
@@ -15,7 +14,7 @@ public class MainTest {
 		try {
 			DataBaseConnection.setUp();
 			DataBaseConnection.insertDefaultDataInDb(1, "Monthly", 30);
-			DataBaseConnection.insertDefaultDataInDb(2, "Annually", 364);
+			DataBaseConnection.insertDefaultDataInDb(2, "Annually", 365);
 
 			Reader reader = new Reader(103, "Veru2", "user", "user", "abc@gmail.com", 1);
 			readerManager.createReader(reader);

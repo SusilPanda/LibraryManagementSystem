@@ -102,9 +102,10 @@ public class ReaderDaoImpl implements ReaderDao {
 			 
 			 updatePreparedStatement.setString(1, reader.getReaderName());
 			 updatePreparedStatement.setString(2, reader.getUserName());
-			 updatePreparedStatement.setString(4, reader.getPassword());
-			 updatePreparedStatement.setInt(5, reader.getReaderId());
-			 updatePreparedStatement.setInt(6, reader.getSubscriptionId());
+			 updatePreparedStatement.setString(3, reader.getPassword());
+			 updatePreparedStatement.setString(4, reader.getEmailId());
+			 updatePreparedStatement.setInt(5, reader.getSubscriptionId());
+			 updatePreparedStatement.setInt(6, reader.getReaderId());
 	        
 			 updatePreparedStatement.executeUpdate();
 			 updatePreparedStatement.close();

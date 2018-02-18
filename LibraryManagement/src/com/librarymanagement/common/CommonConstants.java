@@ -4,7 +4,7 @@ public class CommonConstants {
 	
 	// table creation query string
 	public static final String CREATE_TABLE_READER_QUERY = "CREATE TABLE IF NOT EXISTS READER(readerid int primary key, name varchar(255),"
-			+ "username varchar(35), password varchar(35), emailid varchar(30), int subscriptionid)";
+			+ "username varchar(35), password varchar(35), emailid varchar(30), subscriptionid int)";
 	
 	public static final String CREATE_TABLE_BOOK_QUERY = "CREATE TABLE IF NOT EXISTS BOOK(bookid long primary key, name varchar(255), title varchar(255),"
 			+ "author varchar(255),  numberofbooks int, numberofavailablebooks int, numberofborrowedbooks int)";
@@ -23,12 +23,12 @@ public class CommonConstants {
 	public static final String SELECT_BOOKING_DETAILS_QUERY = "SELECT * from BOOKINGDETAILS where bookingid = ?";
 	public static final String UPDATE_BOOKING_DETAILS_QUERY = "UPDATE BOOKINGDETAILS SET borrowdate = ?, returndate = ?, bookid = ?, readerid = ? where bookingid = ?";
 	public static final String SELECT_ALL_BOOKING_DETALS_QUERY = "SELECT * from BOOKINGDETAILS";
-	public static final String SELECT_COUNT_BOOKING_DETAILS_QUERY = "SELECT count(*) from BOOKINGDETAILS on readerId = ?";
+	public static final String SELECT_COUNT_BOOKING_DETAILS_QUERY = "SELECT count(*) from BOOKINGDETAILS where readerId = ?";
 	
 	public static final String SELECT_READER_QUERY = "SELECT readerid, name, username, password, emailid, subscriptionid from READER where readerid = ?";
 	public static final String SELECT_ALL_READER_QUERY = "SELECT * from READER";
 	public static final String INSERT_READER_QUERY = "INSERT INTO READER(readerid, name, username, password, emailid, subscriptionid) values(?, ?, ?, ?, ?, ?)";
-	public static final String UPDATE_READER_QUERY = "UPDATE INTO READER(name, username, password, emailid, subscriptionid) values(?, ?, ?, ?, ?) where readerid = ?";
+	public static final String UPDATE_READER_QUERY = "UPDATE READER SET name = ?, username = ?, password = ?, emailid = ?, subscriptionid = ? where readerid = ?";
 	public static final String DELETE_READER_QUERY = "DELETE FROM READER where readerid = ?";
 	
 	public static final String SELECT_BOOK_QUERY = "select bookid, name, title, author, numberofbooks, numberofborrowedbooks, numberofavailablebooks from Book where bookid = ?";

@@ -1,80 +1,80 @@
 package com.librarymanagement.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.librarymanagement.bean.Reader;
 import com.librarymanagement.common.LibraryManagementException;
 import com.librarymanagement.controller.ReaderManager;
+import com.librarymanagement.dao.DataBaseConnection;
 
 public class ReaderManagerTest {
 	
-	private static Reader reader;
+	private static Reader readerJohn;
+	private static Reader readerSam;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		reader = new Reader(5, "Veru5", "user", "user", "veru5@gmail.com", 1);
-	}
-
-	@AfterAll
-	static void tearDownAfterClass() throws Exception {
-		
-		ReaderManager readerManager = new ReaderManager();
-		Reader response = readerManager.getReader(reader.getReaderId());
-		if (response != null) {
-			readerManager.deleteReader(reader.getReaderId());
-		}
+		DataBaseConnection.setUp();
+		DataBaseConnection.insertDefaultDataInDb(1, "Monthly", 30);
+		DataBaseConnection.insertDefaultDataInDb(2, "Annually", 365);
 		
 	}
+	
+	@BeforeEach
+	void setUp() throws Exception {
+		readerJohn = new Reader(101, "john", "user", "user", "john@gmail.com", 1);
+		readerSam = new Reader(102, "Sam", "sam", "sam", "sam@gmail.com", 2);		
+	}
+	
+	@AfterEach
+	public void destroy() throws LibraryManagementException {
+		readerJohn = null;
+		readerSam = null;
+	}
 
 	@Test
-	void testGetReader() {
+	public void testGetReader() throws LibraryManagementException {
 		ReaderManager readerManager = new ReaderManager();
-		Reader responseReader = null;
-		try {
-			responseReader = readerManager.getReader(reader.getReaderId());
-		} catch (LibraryManagementException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		readerManager.createReader(readerJohn);
+		Reader responseReader = readerManager.getReader(readerJohn.getReaderId());
 		
-		Assert.assertEquals(responseReader.getReaderId(), reader.getReaderId());
+		assertEquals(responseReader.getReaderId(), readerJohn.getReaderId());
 	}
 
 	@Test
-	void testCreateReader() {
+	public void testCreateReader() throws LibraryManagementException {
 		ReaderManager readerManager = new ReaderManager();
-		String response = null;
-		try {
-			response = readerManager.createReader(reader);
-		} catch (LibraryManagementException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String response = readerManager.createReader(readerJohn);
 
-		Assert.assertEquals(response, "success");
+		assertEquals(response, "success");
 
 	}
 
 	@Test
-	void testUpdateReader() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testDeleteReader() {
+	public void testUpdateReader() throws LibraryManagementException {
 		ReaderManager readerManager = new ReaderManager();
-		String response = null;
-		try {
-			response = readerManager.deleteReader(reader.getReaderId());
-		} catch (LibraryManagementException e) {
-			e.printStackTrace();
-		}
-		Assert.assertEquals(response, "success");
+		readerManager.createReader(readerSam);
+		String updatedEmailId = "samNew@gmail.com";
+		
+		readerSam.setEmailId(updatedEmailId);
+		String response = readerManager.updateReader(readerSam);
+		assertEquals(response, "success");
+		
+		Reader result = readerManager.getReader(readerSam.getReaderId());
+		assertEquals(result.getEmailId(), updatedEmailId);
 	}
 
+	@Test
+	public void testDeleteReader() throws LibraryManagementException {
+		ReaderManager readerManager = new ReaderManager();
+		String response = readerManager.deleteReader(readerJohn.getReaderId());
+		assertEquals(response, "success");
+	}
 }

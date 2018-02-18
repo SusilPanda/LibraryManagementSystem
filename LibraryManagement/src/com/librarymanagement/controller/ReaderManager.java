@@ -21,7 +21,9 @@ public class ReaderManager {
 		return "success";
 	}
 	
-	public String updateReader(Reader reader) {
+	public String updateReader(Reader reader) throws LibraryManagementException {
+		ReaderDao daoImpl = new ReaderDaoImpl();
+		daoImpl.update(reader);
 		
 		return "success";
 	}
@@ -32,7 +34,4 @@ public class ReaderManager {
 		daoImpl.delete(readerId);
 		return "success";
 	}
-
-	
-	
 }

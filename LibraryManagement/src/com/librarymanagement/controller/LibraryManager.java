@@ -106,7 +106,17 @@ public class LibraryManager {
 		}
 
 	}
+	
+	public BookingDetails getBookingDetails(int bookingId) throws LibraryManagementException {
+		BookManagementDao bookingDao = new BookManagementDaoImpl();
+		BookingDetails booking = bookingDao.get(bookingId);
+		return booking;
+	}
 
+	public void removeBooking(int bookingId) throws LibraryManagementException {
+		BookManagementDao bookingDao = new BookManagementDaoImpl();
+		bookingDao.delete(bookingId);
+	}
 	public void reserveABook() {
 
 	}
