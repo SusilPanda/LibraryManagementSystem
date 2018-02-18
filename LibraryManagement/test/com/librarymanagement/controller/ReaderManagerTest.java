@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.librarymanagement.bean.Reader;
+import com.librarymanagement.common.LibraryManagementException;
 import com.librarymanagement.controller.ReaderManager;
 
 public class ReaderManagerTest {
@@ -16,7 +17,7 @@ public class ReaderManagerTest {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		reader = new Reader(5, "Veru5", "user", "user", "veru5@gmail.com");
+		reader = new Reader(5, "Veru5", "user", "user", "veru5@gmail.com", 1);
 	}
 
 	@AfterAll
@@ -33,7 +34,13 @@ public class ReaderManagerTest {
 	@Test
 	void testGetReader() {
 		ReaderManager readerManager = new ReaderManager();
-		Reader responseReader = readerManager.getReader(reader.getReaderId());
+		Reader responseReader = null;
+		try {
+			responseReader = readerManager.getReader(reader.getReaderId());
+		} catch (LibraryManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		Assert.assertEquals(responseReader.getReaderId(), reader.getReaderId());
 	}
@@ -41,7 +48,13 @@ public class ReaderManagerTest {
 	@Test
 	void testCreateReader() {
 		ReaderManager readerManager = new ReaderManager();
-		String response = readerManager.createReader(reader);
+		String response = null;
+		try {
+			response = readerManager.createReader(reader);
+		} catch (LibraryManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		Assert.assertEquals(response, "success");
 
@@ -55,7 +68,12 @@ public class ReaderManagerTest {
 	@Test
 	void testDeleteReader() {
 		ReaderManager readerManager = new ReaderManager();
-		String response = readerManager.deleteReader(reader.getReaderId());
+		String response = null;
+		try {
+			response = readerManager.deleteReader(reader.getReaderId());
+		} catch (LibraryManagementException e) {
+			e.printStackTrace();
+		}
 		Assert.assertEquals(response, "success");
 	}
 

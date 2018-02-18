@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import com.librarymanagement.common.CommonConstants;
+
 public class DataBaseConnection {
 
 	private static Connection dbConnection = null;
@@ -16,22 +18,15 @@ public class DataBaseConnection {
 	public static void setUp() {
 
 		PreparedStatement createPreparedStatement = null;
-		// check if table exists and if it doesn't then create one
-		String createTableReaderQuery = "CREATE TABLE IF NOT EXISTS READER(readerid int primary key, name varchar(255),"
-				+ "username varchar(255), password varchar(255), emailid varchar(30))";
-		String createTableBookQuery = "CREATE TABLE IF NOT EXISTS BOOK(bookid long primary key, name varchar(255), title varchar(255),"
-				+ "author varchar(255),  numberofbooks int, numberofavailablebooks int, numberofborrowedbooks int)";
-		String createTableBorrowQuery = "CREATE TABLE IF NOT EXISTS BORROW(bookid long foreign key REFERENCES BOOK(bookid), readerid int foreign key REFERENCES READER(readerid),"
-				+ "borrowdate varchar(255), returndate varchar(255))";
-		String createTableSubscriptionQuery = "CREATE TABLE IF NOT EXISTS SUBSCRIPTION(subscriptionid int primary key, subscriptionname varchar(25), validity int)";
-
+		Connection dbConnection = DataBaseConnection.getDbConnection();
+		
 		try {
 			dbConnection.setAutoCommit(false);
 
-			PreparedStatement createTableReaderPreparedStatement = dbConnection.prepareStatement(createTableReaderQuery);
-			PreparedStatement createTableBookPreparedStatement = dbConnection.prepareStatement(createTableBookQuery);
-			//PreparedStatement createTableBorrowPreparedStatement = dbConnection.prepareStatement(createTableBorrowQuery);
-			PreparedStatement createTableSubscriptionPreparedStatement = dbConnection.prepareStatement(createTableSubscriptionQuery);
+			PreparedStatement createTableReaderPreparedStatement = dbConnection.prepareStatement(CommonConstants.CREATE_TABLE_READER_QUERY);
+			PreparedStatement createTableBookPreparedStatement = dbConnection.prepareStatement(CommonConstants.CREATE_TABLE_BOOK_QUERY);
+			PreparedStatement createTableBookingDetailsPreparedStatement = dbConnection.prepareStatement(CommonConstants.CREATE_TABLE_BOOKING_DETAILS_QUERY);
+			PreparedStatement createTableSubscriptionPreparedStatement = dbConnection.prepareStatement(CommonConstants.CREATE_TABLE_SUBSCRIPTION_QUERY);
 			
 			/*createPreparedStatement.addBatch(createTableReaderQuery);
 			createPreparedStatement.addBatch(createTableBookQuery);
@@ -40,12 +35,12 @@ public class DataBaseConnection {
 			//createPreparedStatement.executeBatch();  //executeUpdate();
 			createTableReaderPreparedStatement.executeUpdate();
 			createTableBookPreparedStatement.executeUpdate();
-			//createTableBorrowPreparedStatement.executeUpdate();
+			createTableBookingDetailsPreparedStatement.executeUpdate();
 			createTableSubscriptionPreparedStatement.executeUpdate();
 			
 			createTableReaderPreparedStatement.close();
 			createTableBookPreparedStatement.close();
-			//createTableBorrowPreparedStatement.close();
+			createTableBookingDetailsPreparedStatement.close();
 			createTableSubscriptionPreparedStatement.close();
 			dbConnection.commit();
 		} catch (SQLException e) {
@@ -57,10 +52,9 @@ public class DataBaseConnection {
 	
 	public static void insertDefaultDataInDb(int id, String name, int validity)
 	{
-	String insertSubscriptionQuery = "INSERT INTO SUBSCRIPTION" + "(subscriptionid, subscriptionname, validity) values" + "(?, ?, ?)";
 	try {
 		dbConnection.setAutoCommit(false);
-		PreparedStatement insertSubscriptionPreparedStatement = dbConnection.prepareStatement(insertSubscriptionQuery);
+		PreparedStatement insertSubscriptionPreparedStatement = dbConnection.prepareStatement(CommonConstants.INSERT_SUBSCRIPTION_QUERY);
 		insertSubscriptionPreparedStatement.setInt(1, id);
 		insertSubscriptionPreparedStatement.setString(2, name);
 		insertSubscriptionPreparedStatement.setInt(3, validity);
@@ -76,21 +70,18 @@ public class DataBaseConnection {
 		Connection dbConnection = null;
 		Properties properties = new Properties();
 		try {
-			InputStream input = new FileInputStream("resources/application.properties");
+			InputStream input = new FileInputStream(CommonConstants.PROPERTIES_FILE_URL);
 			// load a properties file
 			properties.load(input);
 			
-			Class.forName(properties.getProperty("database"));
+			Class.forName(properties.getProperty(CommonConstants.DATABASE_KEY));
 		
-			dbConnection = DriverManager.getConnection(properties.getProperty("dbConnection"),
-					properties.getProperty("dbUser"), properties.getProperty("dbPassword"));
+			dbConnection = DriverManager.getConnection(properties.getProperty(CommonConstants.CONNECTION_KEY),
+					properties.getProperty(CommonConstants.USER_NAME_KEY), properties.getProperty(CommonConstants.USER_PASSWORD_KEY));
 			return dbConnection;
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		
+		} catch (SQLException | IOException | ClassNotFoundException ex) {
+			System.out.println(ex.getMessage());
 		}
 		return dbConnection;
 	}

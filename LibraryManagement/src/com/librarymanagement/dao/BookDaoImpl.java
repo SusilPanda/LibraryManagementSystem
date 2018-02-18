@@ -1,34 +1,116 @@
 package com.librarymanagement.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.librarymanagement.bean.Book;
+import com.librarymanagement.common.CommonConstants;
+import com.librarymanagement.common.LibraryManagementException;
 
 public class BookDaoImpl implements BookDao {
-
-	@Override
-	public Book get(long bookId) {
-		return null;
+	
+	private static Connection dbConnection;
+	
+	public BookDaoImpl() {
+		dbConnection = DataBaseConnection.getDbConnection();
 	}
 
 	@Override
-	public List<Book> get() {
-		return null;
-	}
-
-	@Override
-	public void create(Book book) {
+	public Book get(long bookId) throws LibraryManagementException {
+		PreparedStatement selectPreparedStatement = null;
+		Book book = null;
 		
+		try {
+			dbConnection.setAutoCommit(false);
+			selectPreparedStatement = dbConnection.prepareStatement(CommonConstants.SELECT_BOOK_QUERY);
+			selectPreparedStatement.setLong(1, bookId);
+			ResultSet rs = selectPreparedStatement.executeQuery();
+            while (rs.next()) {
+                System.out.println("Id " + rs.getInt(1) + " Name " + rs.getString(2));
+                book = new Book(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
+                		rs.getInt(6), rs.getInt(7));
+            }
+            
+            selectPreparedStatement.close();
+            dbConnection.commit();			
+		} catch (SQLException e) {
+			throw new LibraryManagementException(e.getMessage());
+		}
+		return book;
 	}
 
 	@Override
-	public Book update(Book book) {
+	public List<Book> getAll() {
 		return null;
 	}
 
 	@Override
-	public void delete(long bookId) {
+	public void create(Book book) throws LibraryManagementException {
+		PreparedStatement insertPreparedStatement = null;
 		
+		 try {
+			 dbConnection.setAutoCommit(false);
+			insertPreparedStatement = dbConnection.prepareStatement(CommonConstants.INSERT_BOOK_QUERY);
+			insertPreparedStatement.setLong(1, book.getBookId());
+	        insertPreparedStatement.setString(2, book.getName());
+	        insertPreparedStatement.setString(3, book.getAuthor());
+	        insertPreparedStatement.setString(4, book.getTitle());
+	        insertPreparedStatement.setInt(5, book.getNumberOfBooks());
+	        insertPreparedStatement.setInt(6, book.getNumberOfBorrowedBooks());
+	        insertPreparedStatement.setInt(7, book.getNumberOfAvailableBooks());
+	        
+	        insertPreparedStatement.executeUpdate();	        
+	        insertPreparedStatement.close();	        
+	        dbConnection.commit();
+		} catch (SQLException e) {
+			throw new LibraryManagementException(e.getMessage());
+		}		
 	}
 
+	@Override
+	public String update(Book book) throws LibraryManagementException {
+		
+		PreparedStatement updatePreparedStatement = null;
+		
+		 try {
+			 dbConnection.setAutoCommit(false);
+			updatePreparedStatement = dbConnection.prepareStatement(CommonConstants.UPDATE_BOOK_QUERY);
+	        updatePreparedStatement.setString(1, book.getName());
+	        updatePreparedStatement.setString(2, book.getAuthor());
+	        updatePreparedStatement.setString(3, book.getTitle());
+	        updatePreparedStatement.setInt(4, book.getNumberOfBooks());
+	        updatePreparedStatement.setInt(5, book.getNumberOfBorrowedBooks());
+	        updatePreparedStatement.setInt(6, book.getNumberOfAvailableBooks());
+	        updatePreparedStatement.setLong(7, book.getBookId());	        
+	        
+	        updatePreparedStatement.executeUpdate();
+	        
+	        updatePreparedStatement.close();
+	        
+	        dbConnection.commit();
+		} catch (SQLException e) {
+			throw new LibraryManagementException(e.getMessage());
+		}	
+		 return "success";
+	}
+
+	@Override
+	public void delete(long bookId) throws LibraryManagementException {
+        PreparedStatement deletePreparedStatement = null;
+		
+		try {
+			dbConnection.setAutoCommit(false);
+			deletePreparedStatement = dbConnection.prepareStatement(CommonConstants.DELETE_BOOK_QUERY);
+			deletePreparedStatement.setLong(1, bookId);
+            
+			deletePreparedStatement.executeUpdate();
+			deletePreparedStatement.close();
+			dbConnection.commit();
+		} catch (SQLException e) {
+			throw new LibraryManagementException(e.getMessage());
+		}
+	}
 }

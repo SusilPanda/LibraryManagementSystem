@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.h2.engine.Database;
-
 import com.librarymanagement.bean.Reader;
+import com.librarymanagement.common.CommonConstants;
+import com.librarymanagement.common.LibraryManagementException;
 
 public class ReaderDaoImpl implements ReaderDao {
 	
@@ -17,135 +17,118 @@ public class ReaderDaoImpl implements ReaderDao {
 	
 	public ReaderDaoImpl() {
 		dbConnection = DataBaseConnection.getDbConnection();
-		DataBaseConnection.setUp();
-		DataBaseConnection.insertDefaultDataInDb(1, "Monthly", 30);
-		DataBaseConnection.insertDefaultDataInDb(2, "Annually", 364);
 	}
 
 	@Override
-	public Reader get(int readerId) {
+	public Reader get(int readerId) throws LibraryManagementException {
 		
 		PreparedStatement selectPreparedStatement = null;
-		String SelectQuery = "select readerid, name, username, password, emailid from READER where readerid = ?";
 		Reader reader = null;
 		
 		try {
 			dbConnection.setAutoCommit(false);
-			selectPreparedStatement = dbConnection.prepareStatement(SelectQuery);
+			selectPreparedStatement = dbConnection.prepareStatement(CommonConstants.SELECT_READER_QUERY);
 			selectPreparedStatement.setInt(1, readerId);
 			ResultSet rs = selectPreparedStatement.executeQuery();
-            System.out.println("H2 In-Memory Database inserted through PreparedStatement");
             while (rs.next()) {
                 System.out.println("Id " + rs.getInt(1) + " Name " + rs.getString(2));
-                reader = new Reader(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
-                
+                reader = new Reader(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6));
             }
+            
             selectPreparedStatement.close();
-
             dbConnection.commit();
-			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new LibraryManagementException(e.getMessage());
 		}
 		
 		return reader;
 	}
 
 	@Override
-	public List<Reader> get() {
+	public List<Reader> get() throws LibraryManagementException {
 		PreparedStatement selectAllPreparedStatement = null;
-		String SelectQuery = "select * from READER";
+		
 		List<Reader> readerList = new ArrayList<>();
 		
 		try {
 			dbConnection.setAutoCommit(false);
-			selectAllPreparedStatement = dbConnection.prepareStatement(SelectQuery);
+			selectAllPreparedStatement = dbConnection.prepareStatement(CommonConstants.SELECT_ALL_READER_QUERY);
 			ResultSet rs = selectAllPreparedStatement.executeQuery();
-            System.out.println("H2 In-Memory Database inserted through PreparedStatement");
             while (rs.next()) {
                 System.out.println("Id " + rs.getInt(1) + " Name " + rs.getString(2));
-                readerList.add(new Reader(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
-                
+                readerList.add(new Reader(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6)));
             }
+            
             selectAllPreparedStatement.close();
-
-            dbConnection.commit();
-			
+            dbConnection.commit();			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new LibraryManagementException(e.getMessage());
 		}
 		
 		return readerList;
 	}
 
 	@Override
-	public void create(Reader reader) {
+	public void create(Reader reader) throws LibraryManagementException {
 		
 		PreparedStatement insertPreparedStatement = null;
-		String insertQuery = "INSERT INTO READER" + "(readerid, name, username, password, emailid) values" + "(?, ?, ?, ?, ?)";
 		
 		 try {
 			 dbConnection.setAutoCommit(false);
-			insertPreparedStatement = dbConnection.prepareStatement(insertQuery);
+			insertPreparedStatement = dbConnection.prepareStatement(CommonConstants.INSERT_READER_QUERY);
 			insertPreparedStatement.setInt(1, reader.getReaderId());
 	        insertPreparedStatement.setString(2, reader.getReaderName());
 	        insertPreparedStatement.setString(3, reader.getUserName());
 	        insertPreparedStatement.setString(4, reader.getPassword());
 	        insertPreparedStatement.setString(5, reader.getEmailId());
+	        insertPreparedStatement.setInt(6, reader.getSubscriptionId());
 	        
 	        insertPreparedStatement.executeUpdate();
-	        
 	        insertPreparedStatement.close();
-	        
 	        dbConnection.commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new LibraryManagementException(e.getMessage());
 		}		
 	}
 
 	@Override
-	public String update(Reader reader) {
+	public String update(Reader reader) throws LibraryManagementException {
 		
 		PreparedStatement updatePreparedStatement = null;
-		String insertQuery = "UPDATE INTO READER" + "(name, username, password, emailid) values" + "(?, ?, ?, ?) where readerid = ?";
 		
 		 try {
 			 dbConnection.setAutoCommit(false);
-			 updatePreparedStatement = dbConnection.prepareStatement(insertQuery);
+			 updatePreparedStatement = dbConnection.prepareStatement(CommonConstants.UPDATE_READER_QUERY);
 			 
 			 updatePreparedStatement.setString(1, reader.getReaderName());
 			 updatePreparedStatement.setString(2, reader.getUserName());
 			 updatePreparedStatement.setString(4, reader.getPassword());
 			 updatePreparedStatement.setInt(5, reader.getReaderId());
+			 updatePreparedStatement.setInt(6, reader.getSubscriptionId());
 	        
 			 updatePreparedStatement.executeUpdate();
-	        
 			 updatePreparedStatement.close();
-	        
 	        dbConnection.commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new LibraryManagementException(e.getMessage());
 		}
 		 return "success";
 	}
 
 	@Override
-	public void delete(int readerId) {
+	public void delete(int readerId) throws LibraryManagementException {
 		PreparedStatement deletePreparedStatement = null;
-		String deleteQuery = "DELETE FROM READER where readerid = ?";
 		
 		try {
 			dbConnection.setAutoCommit(false);
-			deletePreparedStatement = dbConnection.prepareStatement(deleteQuery);
+			deletePreparedStatement = dbConnection.prepareStatement(CommonConstants.DELETE_READER_QUERY);
 			deletePreparedStatement.setInt(1, readerId);
             
 			deletePreparedStatement.executeUpdate();
-	        
 			deletePreparedStatement.close();
 			dbConnection.commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new LibraryManagementException(e.getMessage());
 		}
 	}
-
 }

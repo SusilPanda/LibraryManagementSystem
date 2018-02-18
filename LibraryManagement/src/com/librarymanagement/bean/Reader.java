@@ -3,21 +3,37 @@ package com.librarymanagement.bean;
 public class Reader {
 	
 
-	public int readerId;
-	public String readerName;
-	public String userName;
-	public String password;
-	public Book bookBorrowedId;
-	public String emailId;
-
-	public Reader(int id, String name, String userName, String password, String emailId) {
+	private int readerId;
+	private String readerName;
+	private String userName;
+	private String password;
+	private String emailId;
+	private int subscriptionId;
+	
+	
+	public Reader(int id, String name, String userName, String password, String emailId, int subId) {
 		this.readerId = id;
 		this.readerName = name;
 		this.userName = userName;
 		this.password = password;
 		this.emailId = emailId;
+		this.subscriptionId = subId;
 		
 	}
+	
+	/**
+	 * @return the subscriptionId
+	 */
+	public int getSubscriptionId() {
+		return subscriptionId;
+	}
+	/**
+	 * @param subscriptionId the subscriptionId to set
+	 */
+	public void setSubscriptionId(int subscriptionId) {
+		this.subscriptionId = subscriptionId;
+	}
+	
 	/**
 	 * @return the emailId
 	 */
@@ -78,24 +94,10 @@ public class Reader {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	/**
-	 * @return the bookBorrowedId
-	 */
-	public Book getBookBorrowedId() {
-		return bookBorrowedId;
-	}
-	/**
-	 * @param bookBorrowedId the bookBorrowedId to set
-	 */
-	public void setBookBorrowedId(Book bookBorrowedId) {
-		this.bookBorrowedId = bookBorrowedId;
-	}
 	
 	@Override
 	public String toString() {
 		return "Reader [readerId=" + readerId + ", readerName=" + readerName + ", userName=" + userName + ", password="
-				+ password + ", bookBorrowedId=" + bookBorrowedId + ", emailId=" + emailId + "]";
+				+ password + ", emailId=" + emailId + "]";
 	}
-
-	
 }
