@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.librarymanagement.bean.BookingDetails;
 import com.librarymanagement.common.CommonConstants;
@@ -16,6 +17,7 @@ import com.librarymanagement.common.LibraryManagementException;
 public class BookManagementDaoImpl implements BookManagementDao {
 	
 	private static Connection dbConnection;
+	private static final Logger LOGGER = Logger.getLogger(BookManagementDaoImpl.class.getName());
 	
 	public BookManagementDaoImpl() {
 		dbConnection = DataBaseConnection.getDbConnection();
@@ -40,6 +42,7 @@ public class BookManagementDaoImpl implements BookManagementDao {
 	        insertPreparedStatement.close();	        
 	        dbConnection.commit();
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in create booking : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}		
 	}
@@ -62,6 +65,7 @@ public class BookManagementDaoImpl implements BookManagementDao {
 
             dbConnection.commit();
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in get booking details : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}
 		
@@ -88,6 +92,7 @@ public class BookManagementDaoImpl implements BookManagementDao {
 	        
 	        dbConnection.commit();
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in update booking : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}	
 	}
@@ -116,6 +121,7 @@ public class BookManagementDaoImpl implements BookManagementDao {
             dbConnection.commit();
 			
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in getAll booking details : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}
 		return bookingList;
@@ -139,6 +145,7 @@ public class BookManagementDaoImpl implements BookManagementDao {
 
             dbConnection.commit();
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in get count of booking : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}
 		

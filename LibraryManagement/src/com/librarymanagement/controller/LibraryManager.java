@@ -3,6 +3,7 @@ package com.librarymanagement.controller;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.librarymanagement.bean.Book;
 import com.librarymanagement.bean.BookingDetails;
@@ -17,12 +18,21 @@ import com.librarymanagement.dao.ReaderDao;
 import com.librarymanagement.dao.ReaderDaoImpl;
 
 public class LibraryManager {
+	private static final Logger LOGGER = Logger.getLogger(LibraryManager.class.getName());
 
+	/**
+	 * @return
+	 */
 	public List<Book> getAllAvailableBooks() {
 
 		return null;
 	}
 
+	/**
+	 * Method to get all borrowed books.
+	 * @return
+	 * @throws LibraryManagementException
+	 */
 	public List<BookingDetails> getAllBorrowedBooks() throws LibraryManagementException {
 		BookManagementDao bookingDao = new BookManagementDaoImpl();
 		List<BookingDetails> bookingList = bookingDao.getAll();
@@ -30,10 +40,17 @@ public class LibraryManager {
 		return bookingList;
 	}
 
+	/**
+	 * Method to borrow a book.
+	 * @param readerId
+	 * @param bookId
+	 * @throws LibraryManagementException
+	 */
 	public void borrowABook(int readerId, long bookId) throws LibraryManagementException {
 		// validate the request
 		if (!LibraryManagementUtility.validateParameters(readerId)
 				&& !LibraryManagementUtility.validateParameters(bookId)) {
+			LOGGER.severe("invalid parameters in the request : ");
 			throw new LibraryManagementException(
 					"Invalid Parameters received, Library Management doesn't support these parameters");
 		}
@@ -43,10 +60,13 @@ public class LibraryManager {
 		Reader reader = readerDao.get(readerId);
 		
 		int numberOfBooksBorrowed = getNumberOfBooksBorrowed(readerId);
+		LOGGER.info("number of books issued for user : " + reader.getReaderName() + " : " + numberOfBooksBorrowed);
 		
-		if(reader.getSubscriptionId() == 1 && numberOfBooksBorrowed > 5) {
+		if(reader.getSubscriptionId() == 1 && numberOfBooksBorrowed >= 5) {
+			LOGGER.warning("number of books issued limit reached for user : " + reader.getReaderName());
 			throw new LibraryManagementException("Reader has borrowed the maximum number of books.");
-		} else if(reader.getSubscriptionId() == 2 && numberOfBooksBorrowed > 10) {
+		} else if(reader.getSubscriptionId() == 2 && numberOfBooksBorrowed >= 10) {
+			LOGGER.warning("number of books issued limit reached for user : " + reader.getReaderName());
 			throw new LibraryManagementException("Reader has borrowed the maximum number of books.");
 		}
 		
@@ -64,23 +84,34 @@ public class LibraryManager {
 			book.setNumberOfBorrowedBooks(book.getNumberOfBorrowedBooks() + 1);
 			bookDao.update(book);
 		} else {
+			LOGGER.warning("requesting book is not available in db");
 			throw new LibraryManagementException("Lending of a book failed, due to book is not present in DB");
 		}
 	}
 
+	/**
+	 * Method to get number of books borrowed by a user as per the subscription..
+	 * @param readerId
+	 * @return
+	 * @throws LibraryManagementException
+	 */
 	private int getNumberOfBooksBorrowed(int readerId) throws LibraryManagementException {
 		BookManagementDao bookingDao = new BookManagementDaoImpl();
 		int numberOfBooksBorrowed = bookingDao.getCount(readerId);
 		return numberOfBooksBorrowed;
 	}
 
+	/** Method to return a book with booking id.
+	 * @param bookingId
+	 * @throws LibraryManagementException
+	 */
 	public void returnABook(int bookingId) throws LibraryManagementException {
 
 		// validate the request
 		if (!LibraryManagementUtility.validateParameters(bookingId)) {
+			LOGGER.severe("invalid parameters in the request : ");
 			throw new LibraryManagementException(
 					"Invalid Parameter received, Library Management doesn't support this parameter");
-
 		}
 
 		// update return date in the bookingDetails table
@@ -102,21 +133,33 @@ public class LibraryManager {
 			book.setNumberOfBorrowedBooks(book.getNumberOfBorrowedBooks() - 1);
 			bookDao.update(book);
 		} else {
+			LOGGER.warning("returning book is not available in db");
 			throw new LibraryManagementException("Return of a book failed, due to book is not present in DB");
 		}
 
 	}
 	
+	/**
+	 * Get booking details for a booking.
+	 * @param bookingId
+	 * @return
+	 * @throws LibraryManagementException
+	 */
 	public BookingDetails getBookingDetails(int bookingId) throws LibraryManagementException {
 		BookManagementDao bookingDao = new BookManagementDaoImpl();
 		BookingDetails booking = bookingDao.get(bookingId);
 		return booking;
 	}
 
+	/**
+	 * @param bookingId
+	 * @throws LibraryManagementException
+	 */
 	public void removeBooking(int bookingId) throws LibraryManagementException {
 		BookManagementDao bookingDao = new BookManagementDaoImpl();
 		bookingDao.delete(bookingId);
 	}
+	
 	public void reserveABook() {
 
 	}

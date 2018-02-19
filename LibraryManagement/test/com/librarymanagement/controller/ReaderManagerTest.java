@@ -2,12 +2,10 @@ package com.librarymanagement.controller;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Assert;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import com.librarymanagement.bean.Reader;
 import com.librarymanagement.common.LibraryManagementException;
@@ -19,21 +17,21 @@ public class ReaderManagerTest {
 	private static Reader readerJohn;
 	private static Reader readerSam;
 
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
 		DataBaseConnection.setUp();
 		DataBaseConnection.insertDefaultDataInDb(1, "Monthly", 30);
 		DataBaseConnection.insertDefaultDataInDb(2, "Annually", 365);
 		
 	}
 	
-	@BeforeEach
-	void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		readerJohn = new Reader(101, "john", "user", "user", "john@gmail.com", 1);
 		readerSam = new Reader(102, "Sam", "sam", "sam", "sam@gmail.com", 2);		
 	}
 	
-	@AfterEach
+	@After
 	public void destroy() throws LibraryManagementException {
 		readerJohn = null;
 		readerSam = null;

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.librarymanagement.bean.Reader;
 import com.librarymanagement.common.CommonConstants;
@@ -14,6 +15,7 @@ import com.librarymanagement.common.LibraryManagementException;
 public class ReaderDaoImpl implements ReaderDao {
 	
 	private static Connection dbConnection;
+	private static final Logger LOGGER = Logger.getLogger(ReaderDaoImpl.class.getName());
 	
 	public ReaderDaoImpl() {
 		dbConnection = DataBaseConnection.getDbConnection();
@@ -31,16 +33,15 @@ public class ReaderDaoImpl implements ReaderDao {
 			selectPreparedStatement.setInt(1, readerId);
 			ResultSet rs = selectPreparedStatement.executeQuery();
             while (rs.next()) {
-                System.out.println("Id " + rs.getInt(1) + " Name " + rs.getString(2));
                 reader = new Reader(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6));
             }
             
             selectPreparedStatement.close();
             dbConnection.commit();
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in get reader : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}
-		
 		return reader;
 	}
 
@@ -55,16 +56,15 @@ public class ReaderDaoImpl implements ReaderDao {
 			selectAllPreparedStatement = dbConnection.prepareStatement(CommonConstants.SELECT_ALL_READER_QUERY);
 			ResultSet rs = selectAllPreparedStatement.executeQuery();
             while (rs.next()) {
-                System.out.println("Id " + rs.getInt(1) + " Name " + rs.getString(2));
                 readerList.add(new Reader(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6)));
             }
             
             selectAllPreparedStatement.close();
             dbConnection.commit();			
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in getAll reader : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}
-		
 		return readerList;
 	}
 
@@ -87,6 +87,7 @@ public class ReaderDaoImpl implements ReaderDao {
 	        insertPreparedStatement.close();
 	        dbConnection.commit();
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in create reader : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}		
 	}
@@ -111,6 +112,7 @@ public class ReaderDaoImpl implements ReaderDao {
 			 updatePreparedStatement.close();
 	        dbConnection.commit();
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in update reader : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}
 		 return "success";
@@ -129,6 +131,7 @@ public class ReaderDaoImpl implements ReaderDao {
 			deletePreparedStatement.close();
 			dbConnection.commit();
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in delete reader : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}
 	}

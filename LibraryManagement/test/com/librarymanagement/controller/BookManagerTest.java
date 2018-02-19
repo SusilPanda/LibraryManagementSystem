@@ -3,12 +3,12 @@
  */
 package com.librarymanagement.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import com.librarymanagement.bean.Book;
 import com.librarymanagement.common.LibraryManagementException;
@@ -18,13 +18,13 @@ import com.librarymanagement.dao.DataBaseConnection;
  * @author esusich
  *
  */
-class BookManagerTest {
+public class BookManagerTest {
 
 	private static Book bookJava = null;
 	private static Book bookSql = null;
 
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
 		DataBaseConnection.setUp();
 		DataBaseConnection.insertDefaultDataInDb(1, "Monthly", 30);
 		DataBaseConnection.insertDefaultDataInDb(2, "Annually", 365);
@@ -33,8 +33,8 @@ class BookManagerTest {
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@BeforeEach
-	void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		bookJava = new Book(1, "Core java", "Programming", "schand", 5, 0, 5);
 		bookSql = new Book(2, "MySql", "Database", "Headfirst", 10, 0, 10);
 	}
@@ -42,8 +42,8 @@ class BookManagerTest {
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@AfterEach
-	void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		BookManager bookManager = new BookManager();
 		if (bookManager.getBook(bookJava.getBookId()) != null) {
 			bookManager.deleteBook(bookJava.getBookId());
@@ -57,7 +57,7 @@ class BookManagerTest {
 	 * @throws LibraryManagementException
 	 */
 	@Test
-	void testGetBook() throws LibraryManagementException {
+	public void testGetBook() throws LibraryManagementException {
 		BookManager bookManager = new BookManager();
 		bookManager.createBook(bookJava);
 
@@ -72,7 +72,7 @@ class BookManagerTest {
 	 * @throws LibraryManagementException
 	 */
 	@Test
-	void testCreateBook() throws LibraryManagementException {
+	public void testCreateBook() throws LibraryManagementException {
 		BookManager bookManager = new BookManager();
 		String result = bookManager.createBook(bookJava);
 
@@ -87,7 +87,7 @@ class BookManagerTest {
 	 * @throws LibraryManagementException
 	 */
 	@Test
-	void testUpdateBook() throws LibraryManagementException {
+	public void testUpdateBook() throws LibraryManagementException {
 		BookManager bookManager = new BookManager();
 		bookManager.createBook(bookSql);
 
@@ -107,7 +107,7 @@ class BookManagerTest {
 	 * @throws LibraryManagementException
 	 */
 	@Test
-	void testDeleteBook() throws LibraryManagementException {
+	public void testDeleteBook() throws LibraryManagementException {
 		BookManager bookManager = new BookManager();
 		bookManager.createBook(bookJava);
 

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.librarymanagement.bean.Book;
 import com.librarymanagement.common.CommonConstants;
@@ -13,6 +14,7 @@ import com.librarymanagement.common.LibraryManagementException;
 public class BookDaoImpl implements BookDao {
 	
 	private static Connection dbConnection;
+	private final static Logger LOGGER = Logger.getLogger(BookDaoImpl.class.getName());
 	
 	public BookDaoImpl() {
 		dbConnection = DataBaseConnection.getDbConnection();
@@ -29,7 +31,6 @@ public class BookDaoImpl implements BookDao {
 			selectPreparedStatement.setLong(1, bookId);
 			ResultSet rs = selectPreparedStatement.executeQuery();
             while (rs.next()) {
-                System.out.println("Id " + rs.getInt(1) + " Name " + rs.getString(2));
                 book = new Book(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
                 		rs.getInt(6), rs.getInt(7));
             }
@@ -37,6 +38,7 @@ public class BookDaoImpl implements BookDao {
             selectPreparedStatement.close();
             dbConnection.commit();			
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in get book : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}
 		return book;
@@ -66,6 +68,7 @@ public class BookDaoImpl implements BookDao {
 	        insertPreparedStatement.close();	        
 	        dbConnection.commit();
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in create book : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}		
 	}
@@ -92,6 +95,7 @@ public class BookDaoImpl implements BookDao {
 	        
 	        dbConnection.commit();
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in update book : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}	
 		 return "success";
@@ -110,6 +114,7 @@ public class BookDaoImpl implements BookDao {
 			deletePreparedStatement.close();
 			dbConnection.commit();
 		} catch (SQLException e) {
+			LOGGER.severe("Exception in delete book : " + e.getMessage());
 			throw new LibraryManagementException(e.getMessage());
 		}
 	}

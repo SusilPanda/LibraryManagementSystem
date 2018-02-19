@@ -1,6 +1,6 @@
 package com.librarymanagement.common;
 
-import org.junit.platform.commons.util.StringUtils;
+import org.h2.util.StringUtils;
 
 public class LibraryManagementUtility {
 	
@@ -11,7 +11,7 @@ public class LibraryManagementUtility {
 		} else if(param instanceof Long) {
 			return (long)param >= 0L;
 		} else if(param instanceof String) {
-			return StringUtils.isNotBlank((String) param);
+			return StringUtils.isNullOrEmpty((String) param);
 		}
 		return false;
 		
